@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>90-Day Challenge Tracker | Rise & Build</title>
+  <meta name="description" content="A premium 90-day Islamic habit and skill building challenge tracker. Track prayers, skills, physical movement, and daily wins." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Background geometry -->
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- APP SHELL -->
+<div class="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-icon">☽</span>
+      <div>
+        <h2 class="logo-title">Rise & Build</h2>
+        <p class="logo-sub">90-Day Challenge</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-view="today" onclick="switchView('today')">
+        <span class="nav-icon">🌅</span> Today
+      </button>
+      <button class="nav-btn" data-view="prayers" onclick="switchView('prayers')">
+        <span class="nav-icon">🕌</span> Prayers
+      </button>
+      <button class="nav-btn" data-view="progress" onclick="switchView('progress')">
+        <span class="nav-icon">📈</span> 90-Day Grid
+      </button>
+      <button class="nav-btn" data-view="journal" onclick="switchView('journal')">
+        <span class="nav-icon">📖</span> Journal
+      </button>
+      <button class="nav-btn" data-view="stats" onclick="switchView('stats')">
+        <span class="nav-icon">⚡</span> Stats
+      </button>
+    </nav>
+
+    <div class="sidebar-streak">
+      <div class="streak-ring" id="streakRing">
+        <svg viewBox="0 0 100 100" class="streak-svg">
+          <circle cx="50" cy="50" r="40" class="streak-track"/>
+          <circle cx="50" cy="50" r="40" class="streak-fill" id="streakCircle"/>
+        </svg>
+        <div class="streak-inner">
+          <span class="streak-num" id="streakNum">0</span>
+          <span class="streak-label">streak</span>
+        </div>
+      </div>
+      <p class="streak-text">day streak 🔥</p>
+    </div>
+
+    <div class="sidebar-phase" id="sidebarPhase">
+      <span class="phase-chip">Phase 1</span>
+      <p>Days 1–25: Focus on structured reading and habit-building before deep skill work.</p>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main" id="mainContent">
+
+    <!-- Header bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" onclick="toggleSidebar()" id="menuBtn">☰</button>
+        <div>
+          <p class="topbar-date" id="todayDate">—</p>
+          <h1 class="topbar-title" id="topbarTitle">Today's Mission</h1>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="day-badge" id="dayBadge">Day —</div>
+        <div class="overall-bar-wrap" title="Overall challenge progress">
+          <div class="overall-bar" id="overallBar"></div>
+        </div>
+        <span class="overall-pct" id="overallPct">0%</span>
+      </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!--  VIEW: TODAY                                                  -->
+    <!-- ============================================================ -->
+    <section class="view active" id="view-today">
+
+      <!-- Morning declaration (modal trigger) -->
+      <div class="declaration-banner" id="declBanner" onclick="openDeclarationModal()">
+        <div class="decl-left">
+          <span class="decl-icon">📜</span>
+          <div>
+            <strong>Morning Declaration</strong>
+            <p id="declPreview">Tap to write today's declaration</p>
+          </div>
+        </div>
+        <span class="decl-arrow">›</span>
+      </div>
+
+      <!-- Habit blocks grid -->
+      <div class="blocks-grid">
+
+        <!-- MORNING ANCHOR -->
+        <div class="block sacred" id="block-morning">
+          <div class="block-header">
+            <div class="block-icon-wrap sacred-icon">🌄</div>
+            <div>
+              <h3 class="block-title">Morning Anchor</h3>
+              <span class="block-time">5:30 – 6:20 AM</span>
+            </div>
+            <span class="block-badge sacred-badge">SACRED</span>
+          </div>
+          <div class="checklist" id="checklist-morning">
+            <label class="check-item" data-block="morning" data-key="wake">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">Wake at 5:30 AM — stand up immediately</span>
+            </label>
+            <label class="check-item" data-block="morning" data-key="water">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">2 glasses of water</span>
+            </label>
+            <label class="check-item" data-block="morning" data-key="declaration">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">3-line morning declaration</span>
+            </label>
+          </div>
+          <div class="block-progress-bar"><div class="block-progress-fill" id="prog-morning"></div></div>
+        </div>
+
+        <!-- SKILL BLOCK 1 -->
+        <div class="block core" id="block-skill1">
+          <div class="block-header">
+            <div class="block-icon-wrap core-icon">💻</div>
+            <div>
+              <h3 class="block-title">Skill Block 1</h3>
+              <span class="block-time">6:20 – 7:00 AM · Deep Focus</span>
+            </div>
+            <span class="block-badge core-badge">CORE SKILL</span>
+          </div>
+          <div class="phase-note" id="phaseNote1">
+            <span>📑</span> <em>Phase 1 (Days 1–25): 15 min structured reading — 1 article, 1 topic. Builds focus habit.</em>
+          </div>
+          <div class="checklist" id="checklist-skill1">
+            <label class="check-item" data-block="skill1" data-key="nophone">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">No phone. No distractions.</span>
+            </label>
+            <label class="check-item" data-block="skill1" data-key="session">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">Completed 40-min skill / reading session</span>
+            </label>
+          </div>
+          <div class="skill-log-wrap">
+            <input type="text" class="skill-input" id="skill1-log" placeholder="What did you study / build today?" oninput="saveSkillLog('skill1')" />
+          </div>
+          <div class="block-progress-bar"><div class="block-progress-fill" id="prog-skill1"></div></div>
+        </div>
+
+        <!-- PHYSICAL MOVEMENT -->
+        <div class="block stress" id="block-movement">
+          <div class="block-header">
+            <div class="block-icon-wrap stress-icon">🏃</div>
+            <div>
+              <h3 class="block-title">Physical Movement</h3>
+              <span class="block-time">After Asr · Gaming Replacement</span>
+            </div>
+            <span class="block-badge stress-badge">STRESS RELIEF</span>
+          </div>
+          <div class="checklist" id="checklist-movement">
+            <label class="check-item" data-block="movement" data-key="move">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">20–30 min — walk, run, football, or exercise</span>
+            </label>
+            <label class="check-item" data-block="movement" data-key="nogame">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">No gaming today</span>
+            </label>
+          </div>
+          <div class="block-progress-bar"><div class="block-progress-fill" id="prog-movement"></div></div>
+        </div>
+
+        <!-- SKILL BLOCK 2 -->
+        <div class="block core" id="block-skill2">
+          <div class="block-header">
+            <div class="block-icon-wrap core-icon">🚀</div>
+            <div>
+              <h3 class="block-title">Skill Block 2</h3>
+              <span class="block-time">Evening · Build & Experiment</span>
+            </div>
+            <span class="block-badge core-badge">CORE SKILL</span>
+          </div>
+          <div class="checklist" id="checklist-skill2">
+            <label class="check-item" data-block="skill2" data-key="session">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">45–60 min project work / CTF / automation</span>
+            </label>
+            <label class="check-item" data-block="skill2" data-key="shipped">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">Shipped at least one function / feature</span>
+            </label>
+          </div>
+          <div class="skill-log-wrap">
+            <input type="text" class="skill-input" id="skill2-log" placeholder="What did you build this evening?" oninput="saveSkillLog('skill2')" />
+          </div>
+          <div class="block-progress-bar"><div class="block-progress-fill" id="prog-skill2"></div></div>
+        </div>
+
+        <!-- READING -->
+        <div class="block install" id="block-reading">
+          <div class="block-header">
+            <div class="block-icon-wrap install-icon">📚</div>
+            <div>
+              <h3 class="block-title">Reading</h3>
+              <span class="block-time">After Isha · 20 min</span>
+            </div>
+            <span class="block-badge install-badge">HABIT INSTALL</span>
+          </div>
+          <p class="block-note">Biographies of founders, innovators, Muslim scholars. Start with Farhan bin Fazil → Elon → Hedy Lamarr. One book per month.</p>
+          <div class="checklist" id="checklist-reading">
+            <label class="check-item" data-block="reading" data-key="read">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">20 pages or 20 minutes of reading</span>
+            </label>
+          </div>
+          <div class="skill-log-wrap">
+            <input type="text" class="skill-input" id="reading-log" placeholder="Book title & key insight today..." oninput="saveSkillLog('reading')" />
+          </div>
+          <div class="block-progress-bar"><div class="block-progress-fill" id="prog-reading"></div></div>
+        </div>
+
+        <!-- EVENING SHUTDOWN -->
+        <div class="block sacred" id="block-shutdown">
+          <div class="block-header">
+            <div class="block-icon-wrap sacred-icon">🌙</div>
+            <div>
+              <h3 class="block-title">Evening Shutdown</h3>
+              <span class="block-time">10:00 – 10:15 PM</span>
+            </div>
+            <span class="block-badge sacred-badge">SACRED</span>
+          </div>
+          <div class="wins-section">
+            <p class="wins-label">✨ Today's 3 Wins</p>
+            <input type="text" class="win-input" id="win1" placeholder="Win #1 — even small ones count" oninput="saveWins()" />
+            <input type="text" class="win-input" id="win2" placeholder="Win #2" oninput="saveWins()" />
+            <input type="text" class="win-input" id="win3" placeholder="Win #3" oninput="saveWins()" />
+          </div>
+          <div class="tasks-section">
+            <p class="wins-label">📌 Tomorrow's Top 2 Tasks</p>
+            <input type="text" class="win-input" id="task1" placeholder="Task #1 for tomorrow" oninput="saveWins()" />
+            <input type="text" class="win-input" id="task2" placeholder="Task #2 for tomorrow" oninput="saveWins()" />
+          </div>
+          <div class="checklist" id="checklist-shutdown">
+            <label class="check-item" data-block="shutdown" data-key="sleep">
+              <input type="checkbox" onchange="toggleHabit(this)" />
+              <span class="check-box"></span>
+              <span class="check-label">Asleep by 10:30 PM (7.5 h minimum)</span>
+            </label>
+          </div>
+          <div class="block-progress-bar"><div class="block-progress-fill" id="prog-shutdown"></div></div>
+        </div>
+
+      </div><!-- /blocks-grid -->
+
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  VIEW: PRAYERS                                                -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-prayers">
+      <div class="view-heading">
+        <h2>🕌 Daily Prayers</h2>
+        <p>Track your Fard and Sunnah prayers. Consistency is the foundation.</p>
+      </div>
+      <div class="prayers-grid" id="prayersGrid">
+        <!-- Dynamically rendered -->
+      </div>
+      <div class="prayer-quote">
+        <span class="arabic">إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا</span>
+        <p>Indeed, prayer has been decreed upon the believers a decree of specified times. — Quran 4:103</p>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  VIEW: 90-DAY GRID                                            -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-progress">
+      <div class="view-heading">
+        <h2>📈 90-Day Progress Grid</h2>
+        <p>Each square is one day. Green = complete. Your legacy, one day at a time.</p>
+      </div>
+      <div class="grid-legend">
+        <span class="legend-dot complete"></span> Complete
+        <span class="legend-dot partial"></span> Partial
+        <span class="legend-dot missed"></span> Missed
+        <span class="legend-dot future"></span> Future
+      </div>
+      <div class="day-grid" id="dayGrid"><!-- JS renders --></div>
+      <div class="phase-key">
+        <div class="phase-key-item"><span class="phase-bar p1"></span> Phase 1: Days 1–25 (Reading & Focus Habit)</div>
+        <div class="phase-key-item"><span class="phase-bar p2"></span> Phase 2: Days 26–90 (Deep Skill Work)</div>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  VIEW: JOURNAL                                                -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-journal">
+      <div class="view-heading">
+        <h2>📖 Journal</h2>
+        <p>Your wins, declarations, and reflections — all in one place.</p>
+      </div>
+      <div class="journal-list" id="journalList"><!-- JS renders --></div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  VIEW: STATS                                                  -->
+    <!-- ============================================================ -->
+    <section class="view" id="view-stats">
+      <div class="view-heading">
+        <h2>⚡ Stats</h2>
+        <p>Your 90-day performance at a glance.</p>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-icon">🔥</span>
+          <span class="stat-val" id="stat-streak">0</span>
+          <span class="stat-lbl">Current Streak</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">☽</span>
+          <span class="stat-val" id="stat-prayers">0</span>
+          <span class="stat-lbl">Prayers This Month</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">💻</span>
+          <span class="stat-val" id="stat-skill">0</span>
+          <span class="stat-lbl">Skill Sessions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">🏃</span>
+          <span class="stat-val" id="stat-move">0</span>
+          <span class="stat-lbl">Movement Days</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">📚</span>
+          <span class="stat-val" id="stat-read">0</span>
+          <span class="stat-lbl">Reading Sessions</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">✨</span>
+          <span class="stat-val" id="stat-wins">0</span>
+          <span class="stat-lbl">Wins Logged</span>
+        </div>
+      </div>
+      <div class="habit-chart-wrap">
+        <h3 class="chart-title">Last 30 Days — Daily Completion %</h3>
+        <div class="habit-chart" id="habitChart"></div>
+      </div>
+    </section>
+
+  </main>
+</div><!-- /app -->
+
+<!-- ============================ -->
+<!--  MODAL: Morning Declaration  -->
+<!-- ============================ -->
+<div class="modal-overlay" id="declModal" onclick="closeModalOutside(event,'declModal')">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('declModal')">✕</button>
+    <div class="modal-header">
+      <span class="modal-icon">📜</span>
+      <h2>Morning Declaration</h2>
+      <p>Prime your identity. Speak it, believe it, become it.</p>
+    </div>
+    <div class="modal-body">
+      <label class="decl-qs">① Who am I today?</label>
+      <textarea id="decl1" class="decl-area" placeholder="I am a builder, a learner, a Muslim who rises..." oninput="saveDeclaration()"></textarea>
+      <label class="decl-qs">② What will I build today?</label>
+      <textarea id="decl2" class="decl-area" placeholder="Today I will build / learn / complete..." oninput="saveDeclaration()"></textarea>
+      <label class="decl-qs">③ What am I grateful for?</label>
+      <textarea id="decl3" class="decl-area" placeholder="I am grateful for..." oninput="saveDeclaration()"></textarea>
+    </div>
+    <button class="modal-btn" onclick="closeModal('declModal')">Done — Let's Build ›</button>
+  </div>
+</div>
+
+<!-- ============================ -->
+<!--  MODAL: Day Detail           -->
+<!-- ============================ -->
+<div class="modal-overlay" id="dayModal" onclick="closeModalOutside(event,'dayModal')">
+  <div class="modal-card modal-card-sm">
+    <button class="modal-close" onclick="closeModal('dayModal')">✕</button>
+    <div id="dayModalContent"></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
